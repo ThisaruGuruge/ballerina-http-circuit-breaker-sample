@@ -1,4 +1,3 @@
-import ballerina/filepath;
 import ballerina/http;
 import ballerina/log;
 
@@ -15,48 +14,16 @@ http:CircuitBreakerConfig http2CircuitBreakerConfig = {
     statusCodes: [400, 401, 402, 403, 404, 500, 501, 502, 503]
 };
 
-http:ClientSecureSocket secureSocketConfig = {
-        keyStore: {
-            path: "resources" + filepath:getPathSeparator() + "ballerinaKeystore.p12",
-            password: "ballerina"
-        },
-        trustStore: {
-            path: "resources" + filepath:getPathSeparator() + "ballerinaTruststore.p12",
-            password: "ballerina"
-        },
-        protocol: {
-            name: "TLSv1.2",
-            versions: ["TLSv1.2","TLSv1.1"]
-        },
-        ciphers:["TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA"]
-};
-
 http:ClientEndpointConfig http2ClientConfig = {
     circuitBreaker: http2CircuitBreakerConfig,
     timeoutInMillis: 2000,
-    httpVersion: "2.0",
-    secureSocket: secureSocketConfig
+    httpVersion: "2.0"
 };
 
-http:Client http2WeatherClient = new("https://localhost:9091", http2ClientConfig);
+http:Client http2WeatherClient = new("http://localhost:9091", http2ClientConfig);
 
 listener http:Listener http2CircuitBreakerListener = new(8081, {
-    httpVersion: "2.0",
-    secureSocket: {
-        keyStore: {
-            path: "resources" + filepath:getPathSeparator() + "ballerinaKeystore.p12",
-            password: "ballerina"
-        },
-        trustStore: {
-            path: "resources" + filepath:getPathSeparator() + "ballerinaTruststore.p12",
-            password: "ballerina"
-        },
-        protocol: {
-            name: "TLSv1.2",
-            versions: ["TLSv1.2","TLSv1.1"]
-        },
-        ciphers:["TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA"]
-    }
+    httpVersion: "2.0"
 });
 
 @http:ServiceConfig {

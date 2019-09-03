@@ -1,9 +1,28 @@
-import ballerina/log;
+import ballerina/filepath;
 import ballerina/http;
+import ballerina/log;
 import ballerina/task;
 
-http:Client weatherClient = new("http://localhost:8080", {
-    timeoutInMillis: 2000
+http:ClientSecureSocket secureSocketConfig = {
+    keyStore: {
+        path: "resources" + filepath:getPathSeparator() + "ballerinaKeystore.p12",
+        password: "ballerina"
+    },
+    trustStore: {
+        path: "resources" + filepath:getPathSeparator() + "ballerinaTruststore.p12",
+        password: "ballerina"
+    },
+    protocol: {
+        name: "TLSv1.2",
+        versions: ["TLSv1.2","TLSv1.1"]
+    },
+    ciphers:["TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA"]
+};
+
+http:Client weatherClient = new("https://localhost:8082", {
+    timeoutInMillis: 2000,
+    httpVersion: "2.0",
+    secureSocket: secureSocketConfig
 });
 
 listener task:Listener weatherTimer = new({ intervalInMillis: 1000 });
