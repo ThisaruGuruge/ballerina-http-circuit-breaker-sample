@@ -1,15 +1,15 @@
 import ballerina/log;
 import ballerina/http;
-import ballerina/runtime;
+import ballerina/task;
 
 http:Client weatherClient = new("http://localhost:8080", {
     timeoutInMillis: 2000
 });
 
-public function main() {
-    int count = 0;
+listener task:Listener weatherTimer = new({ intervalInMillis: 1000 });
 
-    while (count < 10) {
+service WeatherReceiverTimerService on weatherTimer {
+    resource function onTrigger() {
         var weatherResponse = weatherClient->get("/getWeather");
         if (weatherResponse is http:Response) {
             var payload = weatherResponse.getTextPayload();
@@ -21,7 +21,5 @@ public function main() {
         } else {
             log:printError("Error returned while attempting to retrieve weather data", weatherResponse);
         }
-        count += 1;
-        runtime:sleep(1000);
     }
 }
