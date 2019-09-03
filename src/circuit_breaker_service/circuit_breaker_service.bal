@@ -3,13 +3,13 @@ import ballerina/log;
 
 http:RollingWindow rollingWindowConfig = {
     requestVolumeThreshold: 3,
-	timeWindowInMillis: 20000,
-	bucketSizeInMillis: 20000 // 5 Buckets
+	timeWindowInMillis: 10000,
+	bucketSizeInMillis: 2000 // 5 Buckets
 };
 
 http:CircuitBreakerConfig circuitBreakerConfig = {
     rollingWindow: rollingWindowConfig,
-    resetTimeInMillis: 20000,
+    resetTimeInMillis: 10000,
     failureThreshold: 0.3, // If more than 3 requests failed among 10 requests, circuit trips.
     statusCodes: [400, 401, 402, 403, 404, 500, 501, 502, 503]
 };

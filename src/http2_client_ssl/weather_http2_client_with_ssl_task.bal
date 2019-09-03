@@ -22,6 +22,7 @@ http:ClientSecureSocket secureSocketConfig = {
 http:Client weatherClient = new("https://localhost:8082", {
     timeoutInMillis: 2000,
     httpVersion: "2.0",
+
     secureSocket: secureSocketConfig
 });
 

@@ -1,6 +1,5 @@
 import ballerina/filepath;
 import ballerina/http;
-import ballerina/log;
 
 http:ListenerSecureSocket secureSocketConfig = {
     keyStore: {
@@ -24,6 +23,7 @@ listener http:Listener http2WeatherListenerSsl = new(9092, {
 });
 
 int http2CountSsl = 0;
+string http2ServicePrefixSsl = "[HTTP/2 WeatherService]";
 
 @http:ServiceConfig {
     basePath: "/"
@@ -35,18 +35,12 @@ service Http2WeatherServiceSsl on http2WeatherListenerSsl {
     resource function getWeather(http:Caller caller, http:Request req) {
         http:Response response = new;
         http2CountSsl += 1;
-        if (http2CountSsl % 5 == 0) {
-            log:printInfo("[HTTP/2 WeatherService] Trying to Send Temperature Response");
-            string temperature = getTemperature().toString();
-            response.setPayload(temperature);
-            var result = caller->respond(response);
-            handleResult(result);
+        if (http2CountSsl < 5) {
+            sendTemperatureResponse(caller, response, http2ServicePrefixSsl);
+        } else if (http2CountSsl < 10) {
+            sendErrorResponse(caller, response, http2ServicePrefixSsl);
         } else {
-            log:printInfo("[HTTP/2 WeatherService] Trying to Send ERROR Response");
-            response.statusCode = 501;
-            response.setPayload("Internal error occurred.");
-            var result = caller->respond(response);
-            handleResult(result);
+            sendTemperatureResponse(caller, response, http2ServicePrefixSsl);
         }
     }
 }

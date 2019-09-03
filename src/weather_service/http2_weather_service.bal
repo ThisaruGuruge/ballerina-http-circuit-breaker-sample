@@ -1,11 +1,11 @@
 import ballerina/http;
-import ballerina/log;
 
 listener http:Listener http2WeatherService = new(9091, {
     httpVersion: "2.0"
 });
 
 int http2Count = 0;
+string http2ServicePrefix = "[HTTP/2 WeatherService]";
 
 @http:ServiceConfig {
     basePath: "/"
@@ -17,18 +17,12 @@ service Http2WeatherService on http2WeatherService {
     resource function getWeather(http:Caller caller, http:Request req) {
         http:Response response = new;
         http2Count += 1;
-        if (http2Count % 5 == 0) {
-            log:printInfo("[HTTP/2 WeatherService] Trying to Send Temperature Response");
-            string temperature = getTemperature().toString();
-            response.setPayload(temperature);
-            var result = caller->respond(response);
-            handleResult(result);
+        if (http2Count < 5) {
+            sendTemperatureResponse(caller, response, http2ServicePrefix);
+        } else if (http2Count < 10) {
+            sendErrorResponse(caller, response, http2ServicePrefix);
         } else {
-            log:printInfo("[HTTP/2 WeatherService] Trying to Send ERROR Response");
-            response.statusCode = 501;
-            response.setPayload("Internal error occurred.");
-            var result = caller->respond(response);
-            handleResult(result);
+            sendTemperatureResponse(caller, response, http2ServicePrefix);
         }
     }
 }
