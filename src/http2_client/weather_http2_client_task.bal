@@ -2,7 +2,7 @@ import ballerina/log;
 import ballerina/http;
 import ballerina/task;
 
-http:Client weatherClient = new("http://localhost:8080", {
+http:Client weatherClient = new("http://localhost:8081", {
     timeoutInMillis: 2000,
     httpVersion: "2.0"
 });

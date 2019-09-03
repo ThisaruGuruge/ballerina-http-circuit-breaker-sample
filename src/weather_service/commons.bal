@@ -14,6 +14,6 @@ public function handleResult(error? result) {
     if (result is error) {
         log:printError("[WeatherService] Error occurred while sending the response", result);
     } else {
-        log:printInfo("[WeatherService] Response sent successfully");
+        log:printInfo("[WeatherService] Response sent successfully\n");
     }
 }

@@ -28,6 +28,7 @@ service Http2WeatherService on http2WeatherService {
             response.statusCode = 501;
             response.setPayload("Internal error occurred.");
             var result = caller->respond(response);
+            handleResult(result);
         }
     }
 }
