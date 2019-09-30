@@ -14,7 +14,7 @@ http:CircuitBreakerConfig circuitBreakerConfig = {
     statusCodes: [400, 401, 402, 403, 404, 500, 501, 502, 503]
 };
 
-http:ClientEndpointConfig clientConfig = {
+http:ClientConfiguration clientConfig = {
     circuitBreaker: circuitBreakerConfig,
     timeoutInMillis: 2000
 };

@@ -31,7 +31,7 @@ http:ClientSecureSocket secureSocketConfig = {
         ciphers:["TLS_ECDHE_RSA_WITH_AES_128_CBC_SHA"]
 };
 
-http:ClientEndpointConfig http2ClientConfigSsl = {
+http:ClientConfiguration http2ClientConfigSsl = {
     circuitBreaker: http2CircuitBreakerConfigSsl,
     timeoutInMillis: 2000,
     httpVersion: "2.0",
